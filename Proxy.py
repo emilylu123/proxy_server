@@ -139,7 +139,7 @@ while True:
             # What would be the appropriate status code and message to send to client?
             # store the value in clientResponse
             # ~~~~ INSERT CODE ~~~~
-            clientResponse = out
+            clientResponse = '404 Not Found'
             # ~~~~ END CODE INSERT ~~~~
 
             print 'Sending to the client:'

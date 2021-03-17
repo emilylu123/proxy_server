@@ -45,7 +45,7 @@ except:
 try:
     # Listen on the server socket
     # ~~~~ INSERT CODE ~~~~
-    proxySocket.listen(10)
+    proxySocket.listen(100)
     # ~~~~ END CODE INSERT ~~~~
     print 'Listening to socket'
 except:
@@ -118,15 +118,12 @@ while True:
         cacheFile = open(cacheLocation, "r")
         outputdata = cacheFile.readlines()
 
-        print 'Cache hit! Loading from cache file: ' + cacheLocation
+        print '>>> Cache hit! Loading from cache file: ' + cacheLocation
         # ProxyServer finds a cache hit
         # Send back contents of cached file
         # ~~~~ INSERT CODE ~~~~
         out = ''.join(outputdata)
-        print '>>> Out: ', out
-        print "-------------"
-        proxySocket.sendall(out + "\r\n\r\n")
-        print "-------------"
+        clientSocket.sendall(out + "\r\n\r\n")
         # ~~~~ END CODE INSERT ~~~~
 
         cacheFile.close()
@@ -139,7 +136,7 @@ while True:
             # What would be the appropriate status code and message to send to client?
             # store the value in clientResponse
             # ~~~~ INSERT CODE ~~~~
-            clientResponse = '404 Not Found'
+            clientResponse = 'HTTP/1.1 404 Not Found'
             # ~~~~ END CODE INSERT ~~~~
 
             print 'Sending to the client:'
@@ -210,7 +207,7 @@ while True:
 
                 # Send the response to the client
                 # ~~~~ INSERT CODE ~~~~
-                originServerSocket.sendall(response)
+                clientSocket.send(response)
                 # ~~~~ END CODE INSERT ~~~~
 
                 # finished sending to origin server - shutdown socket writes
@@ -227,7 +224,7 @@ while True:
                     os.makedirs(cacheDir)
                 cacheFile = open(cacheLocation, 'wb')
 
-                # Save orogin server response in the cache file
+                # Save origin server response in the cache file
                 # ~~~~ INSERT CODE ~~~~
                 cacheFile.write(response)
                 # ~~~~ END CODE INSERT ~~~~

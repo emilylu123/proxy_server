@@ -118,12 +118,31 @@ while True:
         cacheFile = open(cacheLocation, "r")
         outputdata = cacheFile.readlines()
 
-        print '>>> Cache hit! Loading from cache file: ' + cacheLocation
+        print 'Cache hit! Loading from cache file: ' + cacheLocation
         # ProxyServer finds a cache hit
         # Send back contents of cached file
         # ~~~~ INSERT CODE ~~~~
         out = ''.join(outputdata)
-        clientSocket.sendall(out + "\r\n\r\n")
+        # handle internal server error here
+        if out.strip() in (None, ''):
+            print "> Error in loading cache file: Empty file is found"
+            print '>'
+
+            clientResponse = 'HTTP/1.1 404 Not Found'
+            clientSocket.sendall(clientResponse + "\r\n\r\n")
+            print 'Sending to the client:'
+            print "> ", clientResponse
+            print '>'
+
+            if os.path.isfile:
+                os.remove(cacheLocation)
+                print "> ", cacheLocation + " has been removed."
+
+            print "> Please reload the page again later."
+            print '>'
+
+        else:
+            clientSocket.sendall(out + "\r\n\r\n")
         # ~~~~ END CODE INSERT ~~~~
 
         cacheFile.close()
@@ -136,7 +155,20 @@ while True:
             # What would be the appropriate status code and message to send to client?
             # store the value in clientResponse
             # ~~~~ INSERT CODE ~~~~
+            #  handle internal server error - cache file exists, but can't be open or read
+            print "> Error in loading cacheFile: Can't Open or Read the Cache File"
+            print '>'
+            #  delete local cash files
+            if os.path.isfile:
+                os.remove(cacheLocation)
+                print "> ", cacheLocation + " has been removed."
+                print '>'
+
+            print "> Please reload the page again later."
+            print '>'
+
             clientResponse = 'HTTP/1.1 404 Not Found'
+
             # ~~~~ END CODE INSERT ~~~~
 
             print 'Sending to the client:'
